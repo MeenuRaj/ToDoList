@@ -46,6 +46,7 @@ public class DetailsServlet extends HttpServlet {
 	
 		String message = "";
 		String message1 = "";
+		String message2 = "";
 		String q="select p from Tlist p where p.lid="+item_id;
 		//System.out.println("query "+q);
 		TypedQuery<Tlist>aq =em.createQuery(q,Tlist.class);
@@ -54,7 +55,7 @@ public class DetailsServlet extends HttpServlet {
 		for(Tlist temp:list)
 		{	
 			//pic = "<div class=\"container\"><center><img src='"+temp.getPicture()+"' class=\"img-rounded\" alt=\"Cinque Terre\"width=\"250\" height=\"240\"></center></div>";
-			message+="<h1>ToDo: "+temp.getDescription()+"</h1><h2>Due Date: "+temp.getDuedate()+"</h2><h2>Status: "+temp.getStatus()+"<pre><pre> Date Completed: "+temp.getCompleted()+"</h2>";
+			message+="<h1>Task: "+temp.getDescription()+"</h1><h2>Due Date: "+temp.getDuedate()+"</h2><h2>Status: "+temp.getStatus()+"<pre><pre> Date Completed: "+temp.getCompleted()+"</h2>";
 			/*	+"<a class=\"btn btn-primary\" href=\"AddServlet?itemid="+item_id+"\"> Add to Cart </a>";*/
 			/*message1+="<div class=\"container\">  <form class=\"form-inline\" role=\"form\" action =  \"AddServlet\"  method =\"post\"> <div class=\"form-group\">  <label for=\"\">Quantity:</label>"+
 			   "<input type=\"hidden\" name=\"action\" value=\""+temp.getLid()+"\"/>";*/
@@ -78,11 +79,18 @@ public class DetailsServlet extends HttpServlet {
 		}
 		message1+="<div class=\"container\">"+
 				  "<form role=\"form\" action =  \"Edit.jsp\"  method =\"post\" >"+
+				  
 				  "<button type=\"submit\" class=\"btn btn-default\">Edit</button>"+
 				  "</form></div>";
+		message2+="<div class=\"container\">"+
+				  "<form role=\"form\" action =  \"EditServlet\"  method =\"post\" >"+
+				  "<input type=\"hidden\" name=\"action\" value=\"delete\">"+
+				  "<button type=\"submit\" class=\"btn btn-default\">Delete</button>"+
+				  "</form></div>";
 		
-		System.out.println(message1);
+		//System.out.println(message1);
 		request.setAttribute("edit", message1);
+		request.setAttribute("delete", message2);
 		request.setAttribute("item", message);
 
 	getServletContext().getRequestDispatcher("/details.jsp").forward(request, response);

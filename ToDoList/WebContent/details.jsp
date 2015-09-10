@@ -26,7 +26,7 @@
 				${item}
 			</center>
 		</div>
-		${edit}
+		${edit}  ${delete}
 	</div>
 
 <jsp:include page="footer.jsp"/>

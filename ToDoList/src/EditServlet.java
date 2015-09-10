@@ -39,12 +39,15 @@ public class EditServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		System.out.println("Got to edit servlet");
 		HttpSession session = request.getSession();
 		String username = (String) request.getSession().getAttribute("username");
 		String description = request.getParameter("task");
 		String ddate = request.getParameter("ddate");
 		String cdate = request.getParameter("cdate");
 		Integer itemID = (Integer) request.getSession().getAttribute("itemID");
+        String action = request.getParameter("action");
+        System.out.println("the action is "+action);
 		//int id = Integer.parseInt(itemID);
 		//int item_id = Integer.parseInt(request.getParameter("action"));
 		
@@ -66,31 +69,47 @@ public class EditServlet extends HttpServlet {
 		trans.begin();
 		for (Tlist temp : list2)
 		{
-		try {
-
-			temp.setDescription(description);
-			temp.setDuedate(ddate);
-			System.out.println(cdate);
-			if (cdate!= null || cdate != "")
+			if(action.equalsIgnoreCase("edit"))
 			{
-				temp.setCompleted(cdate);
-				temp.setStatus("Completed");
+			try {
+	
+				temp.setDescription(description);
+				temp.setDuedate(ddate);
+				System.out.println(cdate);
+				if (cdate!= null || cdate != "")
+				{
+					temp.setCompleted(cdate);
+					temp.setStatus("Completed");
+				}
+				if(cdate == null ||  cdate == "")
+				{
+					//temp.setCompleted("N/A");
+					temp.setStatus("Incomplete");
+				}
+				em.merge(temp);
+				trans.commit();
+			} catch (Exception e) {
+				e.printStackTrace();
+			
+			} finally {
+				em.close();
 			}
-			if(cdate == null ||  cdate == "")
+		}
+			else if(action.equals("delete"))
 			{
-				//temp.setCompleted("N/A");
-				temp.setStatus("Incomplete");
+				try {
+					em.remove(em.merge(temp));
+					trans.commit();
+					} catch (Exception e) {
+						e.printStackTrace();
+						
+					} finally {
+						em.close();
+					}
 			}
-			em.merge(temp);
-			trans.commit();
-		} catch (Exception e) {
-			e.printStackTrace();
-		
-		} finally {
-			em.close();
-		}
-		}
 			//trans.rollback();
+		
+		}
 		session.setAttribute("itemID", null);
 		getServletContext().getRequestDispatcher("/list.jsp").forward(request,  response);
 		} 

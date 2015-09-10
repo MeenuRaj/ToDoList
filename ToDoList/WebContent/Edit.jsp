@@ -10,6 +10,7 @@
 
 <div class="container">
   <form role="form" action="EditServlet" method="post">
+  <input type="hidden" name="action" value="edit">
     <div class="form-group">
       <label for="text">Task:</label>
       <input type="text" class="form-control" id="task" name ="task">
